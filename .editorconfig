@@ -1,4 +1,4 @@
-[*.cpp]
+[*.{hpp,cpp,h,c}]
 charset = utf-8
 end_of_line = lf
 indent_size = 2

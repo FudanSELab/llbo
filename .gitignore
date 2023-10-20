@@ -48,3 +48,5 @@ _deps
 # extra gitignore
 build/
 .cache/
+compile_commands.json
+.clangd

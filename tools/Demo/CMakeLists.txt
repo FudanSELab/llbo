@@ -17,6 +17,7 @@ llvm_map_components_to_libnames(REQ_LLVM_LIBRARIES ${LLVM_TARGETS_TO_BUILD}
 
 target_link_libraries(llbo PRIVATE
     llbo-instrument
+    llbo-utils
     ${REQ_LLVM_LIBRARIES}
 )
 set_target_properties(llbo PROPERTIES

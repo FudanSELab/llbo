@@ -56,7 +56,12 @@ endif()
 
 
 ############## FINAL PROJECT CONFIG #################
-include_directories(${LLBO_SRC_DIR}/include)
+message("PROJECT STATUS:
+  Includes    ${CMAKE_SOURCE_DIR}/include
+  Libraries   ${LIBRARY_OUTPUT_PATH}
+")
+
+include_directories(${CMAKE_SOURCE_DIR}/include)
 link_directories(${LIBRARY_OUTPUT_PATH})
 set(CMAKE_TEMP_LIBRARY_PATH "${PROJECT_BINARY_DIR}/lib")
 

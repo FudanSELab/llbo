@@ -14,6 +14,7 @@
 #include "llvm/Support/ErrorHandling.h"
 #include "llvm/Support/FileSystem.h"
 #include "llvm/Support/Program.h"
+#include "llvm/Support/TargetSelect.h"
 #include "llvm/Support/ToolOutputFile.h"
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/Target/TargetMachine.h"
@@ -39,12 +40,6 @@ CodeGenerator::getTargetMachine(const llvm::Module* module) {
   const std::string target_triple = module->getTargetTriple();
   const std::string march = llvm::codegen::getMArch();
   const llvm::Triple triple = llvm::Triple(target_triple);
-  if (target_triple.empty() || march.empty()) {
-    llvm::report_fatal_error(
-        ("target_triple(" + target_triple + ") or MArch(" + march + ") empty")
-            .c_str());
-  }
-
   const llvm::Target* target = llvm::TargetRegistry::lookupTarget(
       march, const_cast<llvm::Triple&>(triple), err);
   if (target == nullptr) {
@@ -73,6 +68,12 @@ CodeGenerator::getTargetMachine(const llvm::Module* module) {
 }
 
 bool CodeGenerator::compile(const std::string output_path) {
+  llvm::InitializeAllTargets();
+  llvm::InitializeAllTargetMCs();
+  llvm::InitializeAllAsmPrinters();
+  llvm::InitializeAllAsmParsers();
+  llvm::cl::AddExtraVersionPrinter(llvm::TargetRegistry::printRegisteredTargetsForVersion);
+
   llvm::cl::PrintOptionValues();
   // add target-library-info-wrapper pass
   std::string target_triple = this->module->getTargetTriple();
@@ -91,11 +92,11 @@ bool CodeGenerator::compile(const std::string output_path) {
   auto out = std::make_unique<llvm::ToolOutputFile>(output_path, err_code,
                                                     llvm::sys::fs::OF_None);
   llvm::raw_pwrite_stream* os(&out->os());
-  if (tm->addPassesToEmitFile(pm, *os, nullptr, llvm::CGFT_ObjectFile)) {
-    assert(false && "target does not support generation of this file type!");
-  }
-
-  return pm.run(*this->module);
+  tm->addPassesToEmitFile(pm, *os, os,
+                          llvm::CGFT_ObjectFile);
+  pm.run(*this->module);
+  out->keep(); // to keep the output file
+  return true;
 }
 
 bool CodeGenerator::link(const std::string output_path,

@@ -1,3 +1,6 @@
+#ifndef LLBO_INSTRUMENTATION_INSTRUMENTATION_H
+#define LLBO_INSTRUMENTATION_INSTRUMENTATION_H
+
 #include "llvm/IR/LegacyPassManager.h"
 #include "llvm/IR/Module.h"
 #include "llvm/Pass.h"
@@ -37,3 +40,5 @@ public:
     pm.run(target);
   }
 };
+
+#endif

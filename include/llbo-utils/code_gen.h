@@ -1,3 +1,6 @@
+#ifndef LLBO_UTILS_CODE_GEN_H
+#define LLBO_UTILS_CODE_GEN_H
+
 #include "llbo-utils/link_context.h"
 #include "llvm/CodeGen/AsmPrinter.h"
 #include "llvm/CodeGen/CommandFlags.h"
@@ -33,3 +36,5 @@ public:
                           llvm::StringRef file_path);
 };
 } // namespace llbo
+
+#endif

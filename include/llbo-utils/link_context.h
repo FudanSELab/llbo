@@ -1,3 +1,6 @@
+#ifndef LLBO_UTILS_LINK_CONTEXT_H
+#define LLBO_UTILS_LINK_CONTEXT_H
+
 #include <sstream>
 #include <string>
 #include <vector>
@@ -25,3 +28,5 @@ public:
   }
 };
 } // namespace llbo
+
+#endif
